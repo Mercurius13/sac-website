@@ -37,9 +37,21 @@
     "text": "New Jersey Institute of Technology · Student Activities Council",
     "note": "Campus Center 476 · General meetings Wednesdays @ 2:30",
     "socials": [
-      { "image": "/media/get-involved/instagram-logo.jpeg", "label": "Instagram", "href": "https://www.instagram.com/njitsac/" },
-      { "image": "/media/get-involved/tiktok-logo.png", "label": "TikTok", "href": "" },
-      { "image": "/media/get-involved/discord-logo.jpeg", "label": "Discord", "href": "https://discord.com/invite/h7FzyDKZD3" }
+      {
+        "image": "/media/get-involved/instagram-logo.jpeg",
+        "label": "Instagram",
+        "href": "https://www.instagram.com/njitsac/"
+      },
+      {
+        "image": "/media/get-involved/tiktok-logo.png",
+        "label": "TikTok",
+        "href": ""
+      },
+      {
+        "image": "/media/get-involved/discord-logo.jpeg",
+        "label": "Discord",
+        "href": "https://discord.com/invite/h7FzyDKZD3"
+      }
     ]
   }
 }
