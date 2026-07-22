@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAC Admin</title>
+  <link rel="icon" href="/media/shared/sac-logo.jpg">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+
+  <div id="sac-login" class="sac-login">
+    <form id="sac-login-form" class="sac-login__card">
+      <img class="sac-login__mark" src="/media/shared/sac-logo.jpg" alt="" width="56" height="56">
+      <h1 class="sac-login__title">SAC Admin</h1>
+      <label class="sac-field">
+        <span class="sac-field__label">Password</span>
+        <input type="password" name="password" autocomplete="current-password" required autofocus>
+      </label>
+      <p id="sac-login-error" class="sac-login__error" role="alert"></p>
+      <button type="submit" class="sac-btn sac-btn--primary sac-btn--block">Log in</button>
+    </form>
+  </div>
+
+  <div id="sac-editor" hidden>
+
+    <div id="sac-adminbar" class="sac-adminbar">
+      <img class="sac-adminbar__mark" src="/media/shared/sac-logo.jpg" alt="" width="26" height="26">
+      <span class="sac-adminbar__title">Admin Page</span>
+      <div class="sac-adminbar__spacer"></div>
+      <span id="sac-publish-status" class="sac-publish-status"></span>
+      <button id="sac-publish" type="button" class="sac-btn sac-btn--primary sac-btn--sm">Publish</button>
+      <button id="sac-logout" type="button" class="sac-btn sac-btn--ghost sac-btn--sm">Log out</button>
+    </div>
+
+    <div id="sac-preview"></div>
+
+    <div id="sac-popover" class="sac-popover" hidden>
+      <div class="sac-popover__head">
+        <span id="sac-popover-title" class="sac-popover__title"></span>
+        <button id="sac-popover-close" type="button" class="sac-btn sac-btn--sm">Close</button>
+      </div>
+      <div id="sac-popover-body" class="sac-popover__body"></div>
+    </div>
+
+  </div>
+
+  <div id="sac-media-library" class="sac-modal" hidden>
+    <div class="sac-modal__panel">
+      <div class="sac-modal__head">
+        <h2>Choose an image</h2>
+        <button id="sac-media-library-close" type="button" class="sac-btn sac-btn--sm">Close</button>
+      </div>
+      <div id="sac-media-library-grid" class="sac-media-grid"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

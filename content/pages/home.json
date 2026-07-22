@@ -1,0 +1,63 @@
+{
+  "slug": "home",
+  "title": "Home",
+  "description": "The NJIT Student Activities Council enhances the undergraduate student experience through social and recreational events and campus-wide collaborations.",
+  "blocks": [
+    {
+      "id": "home-hero",
+      "type": "hero",
+      "heading": "Student Activities Council",
+      "subheading": "Less Stress, More Fun!",
+      "image": "/media/shared/sac-logo.jpg",
+      "imageAlt": "SAC members gathered together at a campus event",
+      "button": {
+        "label": "Get Involved",
+        "href": "/get-involved"
+      }
+    },
+    {
+      "id": "home-purpose",
+      "type": "richText",
+      "heading": "Our Purpose",
+      "body": "The organization aims to enhance the undergraduate student experience at NJIT through <strong>social</strong> and <strong>recreational events</strong> and campus-wide collaborations. We prioritize member growth by providing opportunities for personal and professional development."
+    },
+    {
+      "id": "home-meet-the-team",
+      "type": "image",
+      "image": "/media/home/meet-the-team.jpg",
+      "imageAlt": "SAC members at their tabling booth on campus, wearing red NJIT shirts",
+      "caption": "Come meet the team, get involved behind the scenes!"
+    },
+    {
+      "id": "home-gallery",
+      "type": "gallery",
+      "heading": "Life at SAC",
+      "items": [
+        {
+          "image": "/media/home/gallery-01.jpg",
+          "alt": "SAC members posing together in costume at a campus event"
+        },
+        {
+          "image": "/media/home/gallery-02.jpg",
+          "alt": "SAC members at a holiday-themed event with inflatable decorations"
+        },
+        {
+          "image": "/media/home/gallery-03.jpg",
+          "alt": "Students taking part in a SAC activity"
+        },
+        {
+          "image": "/media/home/gallery-04.jpg",
+          "alt": "Students gathered at a SAC event on campus"
+        },
+        {
+          "image": "/media/home/gallery-05.jpg",
+          "alt": "SAC event photo"
+        },
+        {
+          "image": "/media/home/gallery-06.jpg",
+          "alt": "SAC event photo"
+        }
+      ]
+    }
+  ]
+}

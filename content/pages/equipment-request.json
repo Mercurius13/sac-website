@@ -1,0 +1,50 @@
+{
+  "slug": "equipment-request",
+  "title": "Equipment Request",
+  "description": "Request SAC equipment for your event - spin wheel, board games, axe throw, and speaker.",
+  "blocks": [
+    {
+      "id": "eq-hero",
+      "type": "hero",
+      "heading": "Equipment Request",
+      "subheading": "Borrow SAC equipment for your event.",
+      "image": "/media/home/meet-the-team.jpg",
+      "imageAlt": "SAC members at their tabling booth on campus"
+    },
+    {
+      "id": "eq-items",
+      "type": "cardGrid",
+      "heading": "Available Equipment",
+      "variant": "tiles",
+      "items": [
+        {
+          "image": "/media/equipment/spin-wheel.jpg",
+          "title": "Spin Wheel",
+          "subtitle": ""
+        },
+        {
+          "image": "/media/equipment/board-games.jpg",
+          "title": "Board Games",
+          "subtitle": ""
+        },
+        {
+          "image": "/media/equipment/axe-throw.jpg",
+          "title": "Axe Throw",
+          "subtitle": ""
+        },
+        {
+          "image": "/media/equipment/speaker.jpg",
+          "title": "Speaker",
+          "subtitle": ""
+        }
+      ]
+    },
+    {
+      "id": "eq-request-button",
+      "type": "buttonLink",
+      "body": "Fill out the request form and we'll get back to you.",
+      "label": "Request Form",
+      "href": "https://forms.gle/8eowZKX7jzXSaXuX7"
+    }
+  ]
+}

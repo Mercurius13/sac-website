@@ -1,0 +1,40 @@
+{
+  "slug": "get-involved",
+  "title": "Get Involved",
+  "description": "Join a SAC committee. General meetings Wednesdays at 2:30 in Campus Center 476.",
+  "blocks": [
+    {
+      "id": "gi-hero",
+      "type": "hero",
+      "heading": "Get Involved!",
+      "subheading": "Join a committee and help build what happens on campus.",
+      "image": "/media/home/gallery-02.jpg",
+      "imageAlt": "SAC members together at a campus holiday event"
+    },
+    {
+      "id": "gi-flyer",
+      "type": "image",
+      "image": "/media/get-involved/banner.jpg",
+      "imageAlt": "SAC flyer reading 'Less Stress, More Fun'. The Student Activities Council brings fun to NJIT through major events, volunteering, and social media and event coordinator committees. General meetings Wednesdays at 2:30, Campus Center 476.",
+      "caption": ""
+    },
+    {
+      "id": "gi-committees",
+      "type": "cardGrid",
+      "heading": "Committee Meetings",
+      "variant": "text",
+      "items": [
+        {
+          "title": "The Social Media Committee",
+          "subtitle": "12:30pm on Wednesdays",
+          "body": "Collaborate with the team to plan and create marketing materials that promote our organization's events and initiatives."
+        },
+        {
+          "title": "The Event Coordinator Committee",
+          "subtitle": "4:30pm on Wednesday",
+          "body": "Collaborate with the team to brainstorm event concepts, design layouts for the Highlander Hub, and develop the strategic plans that bring our organization's initiatives to life."
+        }
+      ]
+    }
+  ]
+}

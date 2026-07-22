@@ -1,0 +1,45 @@
+{
+  "title": "SAC",
+  "fullName": "NJIT Student Activities Council",
+  "tagline": "Less Stress, More Fun!",
+  "logo": "/media/shared/sac-logo.jpg",
+  "theme": {
+    "gold": "#d4a03c",
+    "goldDeep": "#a8761f",
+    "red": "#a8232b",
+    "ink": "#14141a",
+    "paper": "#ffffff",
+    "paperAlt": "#f7f5f1"
+  },
+  "nav": [
+    {
+      "label": "Home",
+      "slug": "home"
+    },
+    {
+      "label": "Events",
+      "slug": "events"
+    },
+    {
+      "label": "About",
+      "slug": "about"
+    },
+    {
+      "label": "Equipment Request",
+      "slug": "equipment-request"
+    },
+    {
+      "label": "Get Involved",
+      "slug": "get-involved"
+    }
+  ],
+  "footer": {
+    "text": "New Jersey Institute of Technology · Student Activities Council",
+    "note": "Campus Center 476 · General meetings Wednesdays @ 2:30",
+    "socials": [
+      { "image": "/media/get-involved/instagram-logo.jpeg", "label": "Instagram", "href": "https://www.instagram.com/njitsac/" },
+      { "image": "/media/get-involved/tiktok-logo.png", "label": "TikTok", "href": "" },
+      { "image": "/media/get-involved/discord-logo.jpeg", "label": "Discord", "href": "https://discord.com/invite/h7FzyDKZD3" }
+    ]
+  }
+}

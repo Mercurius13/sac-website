@@ -1,0 +1,71 @@
+{
+  "slug": "events",
+  "title": "Events",
+  "description": "Upcoming and past events hosted by the NJIT Student Activities Council.",
+  "blocks": [
+    {
+      "id": "events-hero",
+      "type": "hero",
+      "heading": "Events",
+      "subheading": "What we're running, and what we've run.",
+      "image": "/media/events/homecoming-movie-night.jpg",
+      "imageAlt": "Students at a SAC homecoming movie night"
+    },
+    {
+      "id": "events-list",
+      "type": "eventList",
+      "heading": "Events list",
+      "note": "**Undergraduate only**",
+      "upcomingLabel": "Upcoming",
+      "pastLabel": "Past events",
+      "upcoming": [
+        {
+          "date": "2026-09-12",
+          "time": "6:00pm",
+          "location": "Campus Center Ballroom",
+          "title": "Fall Kickoff",
+          "description": "Free food, music, and a spin wheel. Meet the E-Board.",
+          "image": "/media/events/bingo-trivia-night.jpg"
+        },
+        {
+          "title": "Spring Formal",
+          "description": "Date to be announced."
+        }
+      ],
+      "past": [
+        {
+          "image": "/media/events/escape-rooms.jpg",
+          "title": "Escape Rooms"
+        },
+        {
+          "image": "/media/events/sac-spelling-bee.jpg",
+          "title": "SAC Spelling Bee"
+        },
+        {
+          "image": "/media/events/bingo-trivia-night.jpg",
+          "title": "Bingo + Trivia Night"
+        },
+        {
+          "image": "/media/events/arctic-adventure.jpg",
+          "title": "Arctic Adventure"
+        },
+        {
+          "image": "/media/events/paint-n-sip.jpg",
+          "title": "Paint N' Sip"
+        },
+        {
+          "image": "/media/events/homecoming-movie-night.jpg",
+          "title": "Homecoming Movie Night"
+        },
+        {
+          "image": "/media/events/nightmare-on-sac-st.jpg",
+          "title": "Nightmare On S.A.C. St"
+        },
+        {
+          "image": "/media/events/diy-day.jpg",
+          "title": "DIY Day"
+        }
+      ]
+    }
+  ]
+}

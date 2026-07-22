@@ -1,0 +1,76 @@
+{
+  "slug": "about",
+  "title": "About",
+  "description": "Meet the NJIT Student Activities Council E-Board for Fall 2025 - Spring 2026.",
+  "blocks": [
+    {
+      "id": "about-hero",
+      "type": "hero",
+      "heading": "About",
+      "subheading": "Meet the people behind the events.",
+      "image": "/media/about/banner-01.jpg",
+      "imageAlt": "The SAC E-Board posing together in costume at a campus event"
+    },
+    {
+      "id": "about-team-photo",
+      "type": "image",
+      "image": "/media/about/banner-02.jpg",
+      "imageAlt": "SAC members at a winter holiday event with inflatable snowman and gingerbread decorations",
+      "caption": ""
+    },
+    {
+      "id": "about-eboard",
+      "type": "cardGrid",
+      "heading": "E-Board",
+      "subheading": "Fall 2025 - Spring 2026",
+      "variant": "people",
+      "items": [
+        {
+          "image": "/media/about/jessica-verma.jpg",
+          "title": "Jessica Verma",
+          "subtitle": "President"
+        },
+        {
+          "image": "/media/about/konstantinos-protogeropoulos.jpg",
+          "title": "Konstantinos Protogeropoulos",
+          "subtitle": "Vice President"
+        },
+        {
+          "image": "/media/about/julia-umana.jpg",
+          "title": "Julia Umana",
+          "subtitle": "Treasurer"
+        },
+        {
+          "image": "/media/about/sammy-bernal.jpg",
+          "title": "Sammy Bernal",
+          "subtitle": "Publicity"
+        },
+        {
+          "image": "/media/about/mehal-rajak.jpg",
+          "title": "Mehal Rajak",
+          "subtitle": "Social Media Manager"
+        },
+        {
+          "image": "/media/about/hannia-silvestre.jpg",
+          "title": "Hannia Silvestre",
+          "subtitle": "Event Coordinator"
+        },
+        {
+          "image": "/media/about/rebecca-koenemund.jpg",
+          "title": "Rebecca Koenemund",
+          "subtitle": "Event Coordinator"
+        },
+        {
+          "image": "/media/about/brian-castillo.jpg",
+          "title": "Brian Castillo",
+          "subtitle": "Event Coordinator"
+        },
+        {
+          "image": "/media/about/braden-kane.jpg",
+          "title": "Braden Kane",
+          "subtitle": "Event Coordinator"
+        }
+      ]
+    }
+  ]
+}
