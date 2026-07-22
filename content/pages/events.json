@@ -29,7 +29,17 @@
         },
         {
           "title": "Spring Formal",
-          "description": "Date to be announced."
+          "description": "Date to be announced.",
+          "date": "",
+          "time": "",
+          "location": ""
+        },
+        {
+          "date": "2026-10-14",
+          "time": "6:00pm",
+          "location": "The Greens",
+          "title": "Highlanders on the Green",
+          "description": "Movie Night (Obsession, 2026). Free food, merch and blankets."
         }
       ],
       "past": [
