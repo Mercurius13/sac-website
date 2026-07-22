@@ -178,9 +178,6 @@ button, select { font-family: inherit; }
 .sac-publish-status {
   font-size: 0.78rem;
   color: #c9c4b8;
-  max-width: 28ch;
-  overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
