@@ -45,6 +45,11 @@ export function updateBlockField(state, slug, blockId, field, value) {
   return { ...state, pages };
 }
 
+// the footer lives on site (not a page block), so it gets its own transition
+export function updateFooterField(state, field, value) {
+  return { ...state, site: { ...state.site, footer: { ...state.site.footer, [field]: value } } };
+}
+
 // called by app for very obvious purposes (in the name)
 export function toPublishPayload(state, message) {
   return { baseSha: state.headSha, site: state.site, pages: state.pages, message };

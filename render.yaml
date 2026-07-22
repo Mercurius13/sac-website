@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: sac-site
+    name: sac
     runtime: static
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist

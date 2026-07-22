@@ -10,9 +10,10 @@ const FIELD_CONFIG = {
   subheading: { label: 'Subheading', input: 'text' },
   title: { label: 'Title', input: 'text' },
   subtitle: { label: 'Subtitle', input: 'text' },
-  label: { label: 'Button label', input: 'text' },
+  label: { label: 'Label', input: 'text' },
   caption: { label: 'Caption', input: 'text' },
   note: { label: 'Note', input: 'textarea' },
+  text: { label: 'Text', input: 'text' },
   description: { label: 'Description', input: 'textarea' },
   body: { label: 'Body text', input: 'textarea' },
   href: { label: 'Link', input: 'url' },
@@ -23,6 +24,7 @@ const FIELD_CONFIG = {
   items: { label: 'Items', input: 'items' },
   upcoming: { label: 'Upcoming events', input: 'events', itemsKey: 'upcomingFields' },
   past: { label: 'Past events', input: 'events', itemsKey: 'pastFields' },
+  socials: { label: 'Social icons', input: 'events', itemsKey: 'socialsFields' },
   background: { label: 'Background', input: 'background' },
   textColor: { label: 'Text color', input: 'textColor' },
   width: { label: 'Width', input: 'select', options: [25, 33, 50, 67, 75, 100].map((n) => [String(n), `${n}%`]) },
@@ -347,10 +349,19 @@ function buildControl(cfg, value, onChange, imageHelpers) {
 const FIELD_GROUP = {
   image: 'image', imageAlt: 'image', width: 'image', align: 'image', spacing: 'image',
   background: 'bg', textColor: 'fg',
-  items: 'items',
+  items: 'items', socials: 'items',
   upcoming: 'events', past: 'events',
   variant: 'more', height: 'more', overlay: 'more',
 };
+
+// the footer isn't a real block type, but the toolbar/popover treat it like one, editing
+// site.footer instead of a page block. FOOTER_TYPE tags that pseudo-block; its schema lives here.
+export const FOOTER_TYPE = '__footer__';
+const FOOTER_SCHEMA = { fields: ['text', 'note', 'socials'], socialsFields: ['image', 'label', 'href'] };
+
+function schemaFor(block) {
+  return block?.type === FOOTER_TYPE ? FOOTER_SCHEMA : BLOCK_SCHEMA[block?.type];
+}
 
 const GROUP_META = {
   text: { icon: '✎', label: 'Text' },
@@ -366,7 +377,7 @@ const GROUP_ORDER = ['text', 'image', 'items', 'events', 'bg', 'fg', 'more'];
 
 /** Toolbar groups for a block: [{ key, icon, label, fields }] - only groups that apply. */
 export function blockToolGroups(block) {
-  const schema = BLOCK_SCHEMA[block?.type];
+  const schema = schemaFor(block);
   if (!schema) return [];
 
   const byGroup = {};
@@ -381,7 +392,7 @@ export function blockToolGroups(block) {
 /** Render a specific subset of a block's fields into `container` (one popover's worth). */
 export function renderFields(container, block, fields, onFieldChange, imageHelpers) {
   container.replaceChildren();
-  const schema = BLOCK_SCHEMA[block.type] ?? {};
+  const schema = schemaFor(block) ?? {};
 
   for (const field of fields) {
     const cfg = configFor(block, field);
@@ -390,7 +401,7 @@ export function renderFields(container, block, fields, onFieldChange, imageHelpe
       container.append(row(cfg.label, itemsEditor(block.items ?? [], schema.itemFields ?? [], (v) => onFieldChange('items', v), imageHelpers)));
       continue;
     }
-    if (field === 'upcoming' || field === 'past') {
+    if (field === 'upcoming' || field === 'past' || field === 'socials') {
       const itemFields = schema[cfg.itemsKey] ?? [];
       container.append(el('h4', { class: 'sac-fieldgroup__title', text: cfg.label }));
       container.append(itemsEditor(block[field] ?? [], itemFields, (v) => onFieldChange(field, v), imageHelpers));

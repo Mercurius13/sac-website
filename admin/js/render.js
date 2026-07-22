@@ -4,6 +4,10 @@ import { esc, renderBlock } from '../../src/blocks.js';
 import { renderPage } from '../../src/layout.js';
 import { BLOCK_SCHEMA } from '../../src/blocks.js';
 
+// the site footer isn't a page block, but we tag it with this id so it can be selected
+// and edited in the preview just like one (its edits route to site.footer, not a block)
+export const FOOTER_BLOCK_ID = '__site-footer__';
+
 // injected into the preview iframe only: the edit-mode characteristics (pointer cursor,
 // hover outline, selected outline, empty-block styling) that the live site never has.
 // also the block toolbar, which lives inside the selected block so it scrolls with it
@@ -177,6 +181,9 @@ export function renderPreview(container, { site, page }, { today = new Date(), b
   const scrollY = f.contentWindow.scrollY;
   doc.body.innerHTML = parsed.body.innerHTML;
   f.contentWindow.scrollTo(0, scrollY);
+
+  // make the footer a selectable target too
+  doc.querySelector('.site-footer')?.setAttribute('data-block-id', FOOTER_BLOCK_ID);
 
   resolveBlobImages(doc, blobUrls);
   wireBlockSelection(doc, onSelectBlock, onNavigate);

@@ -1,9 +1,9 @@
 /* The editor's controller: wires the login/publish/logout buttons, tracks which page and
 block are selected, and drives the preview + toolbar + popover as the admin edits */
 import { api, ApiError } from './api.js';
-import { createDraft, DraftStore, toPublishPayload, updateBlockField, afterPublish } from './draft.js';
-import { renderPreview, setSelected, mountBlockTools, removeBlockTools } from './render.js';
-import { blockToolGroups, renderFields } from './inspector.js';
+import { createDraft, DraftStore, toPublishPayload, updateBlockField, updateFooterField, afterPublish } from './draft.js';
+import { renderPreview, setSelected, mountBlockTools, removeBlockTools, FOOTER_BLOCK_ID } from './render.js';
+import { blockToolGroups, renderFields, FOOTER_TYPE } from './inspector.js';
 
 // grab every element the editor touches once, up front
 const els = {
@@ -93,6 +93,18 @@ function selectedBlock() {
   return currentPage()?.blocks.find((b) => b.id === selectedBlockId) ?? null;
 }
 
+// the thing currently being edited: a page block, or the footer as a pseudo-block
+function currentEditable() {
+  if (selectedBlockId === FOOTER_BLOCK_ID) {
+    return { id: FOOTER_BLOCK_ID, type: FOOTER_TYPE, ...store.state.site.footer };
+  }
+  return selectedBlock();
+}
+
+function isFooterSelected() {
+  return selectedBlockId === FOOTER_BLOCK_ID;
+}
+
 // the draft store notifies us on every edit; re-render the preview to reflect it
 function onStateChange() {
   renderActivePage();
@@ -154,7 +166,7 @@ function deselect() {
 
 // mount the toolbar inside the selected block: one icon per applicable field group, plus a done button
 function showTools() {
-  const block = selectedBlock();
+  const block = currentEditable();
   if (!block) return removeBlockTools();
 
   const groups = blockToolGroups(block);
@@ -178,9 +190,10 @@ function openGroup(group) {
   removeBlockTools();
 }
 
-// fill the popover with the group's fields; editing one writes to the draft and re-renders
+// fill the popover with the group's fields; editing one writes to the draft and re-renders.
+// footer edits go to site.footer, block edits to the page block.
 function renderPopoverBody(group) {
-  const block = selectedBlock();
+  const block = currentEditable();
   if (!block) {
     els.popover.hidden = true;
     return;
@@ -190,7 +203,8 @@ function renderPopoverBody(group) {
     block,
     group.fields,
     (field, value) => {
-      store.apply(updateBlockField, activeSlug, selectedBlockId, field, value);
+      if (isFooterSelected()) store.apply(updateFooterField, field, value);
+      else store.apply(updateBlockField, activeSlug, selectedBlockId, field, value);
       renderPopoverBody(group);
     },
     { openLibrary, upload: uploadImage },
