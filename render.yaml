@@ -2,8 +2,6 @@ services:
   - type: web
     name: sac-njit
     runtime: static
-    branch: main
-    autoDeploy: true
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
     envVars:
@@ -14,8 +12,6 @@ services:
     name: sac-admin
     runtime: node
     plan: free
-    branch: main
-    autoDeploy: true
     buildCommand: npm ci
     startCommand: npm run admin
     envVars:

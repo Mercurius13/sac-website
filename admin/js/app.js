@@ -59,11 +59,7 @@ async function enterEditor() {
   if (persisted && persisted.headSha === server.headSha) {
     initial = persisted;
   } else if (persisted) {
-    const keep = confirm(
-      'You have unpublished changes from a previous session, based on an older version of the site.\n\n' +
-        'OK = keep working from your saved changes (publishing will warn if anything conflicts)\n' +
-        'Cancel = discard them and start from the current published site',
-    );
+    const keep = await confirmResume();
     initial = keep ? persisted : createDraft(server);
   } else {
     initial = createDraft(server);
@@ -77,6 +73,57 @@ async function enterEditor() {
 
   activeSlug = defaultActiveSlug();
   renderActivePage();
+}
+
+// custom yes/no dialog - native confirm() can't relabel its OK/Cancel buttons. text goes in
+// via textContent so dynamic values (a filename, a page name) can't inject markup.
+// resolves true for the primary button, false for the secondary.
+function confirmDialog({ title, body, confirmLabel = 'Continue', cancelLabel = 'Cancel', danger = false }) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'sac-modal';
+
+    const panel = document.createElement('div');
+    panel.className = 'sac-modal__panel sac-confirm';
+
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'sac-modal__body';
+    const h = document.createElement('h2');
+    h.textContent = title;
+    const p = document.createElement('p');
+    p.textContent = body;
+    bodyEl.append(h, p);
+
+    const actions = document.createElement('div');
+    actions.className = 'sac-confirm__actions';
+    const cancel = document.createElement('button');
+    cancel.type = 'button';
+    cancel.className = 'sac-btn';
+    cancel.textContent = cancelLabel;
+    const ok = document.createElement('button');
+    ok.type = 'button';
+    ok.className = 'sac-btn ' + (danger ? 'sac-btn--danger' : 'sac-btn--primary');
+    ok.textContent = confirmLabel;
+    actions.append(cancel, ok);
+
+    const done = (val) => { overlay.remove(); resolve(val); };
+    cancel.addEventListener('click', () => done(false));
+    ok.addEventListener('click', () => done(true));
+
+    panel.append(bodyEl, actions);
+    overlay.append(panel);
+    document.body.append(overlay);
+  });
+}
+
+// the resume-draft prompt (shown when a saved draft is found on load)
+function confirmResume() {
+  return confirmDialog({
+    title: 'YOU FORGOT TO PUBLISH CHANGES',
+    body: "Do you want to continue with the changes you've made? or start fresh?",
+    confirmLabel: 'Continue',
+    cancelLabel: 'Discard',
+  });
 }
 
 // open on the home page if there is one, else the first page
@@ -227,6 +274,9 @@ function openLibrary() {
     els.mediaLibraryGrid.replaceChildren();
 
     for (const item of media) {
+      const cell = document.createElement('div');
+      cell.className = 'sac-media-cell';
+
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'sac-media-item';
@@ -239,7 +289,16 @@ function openLibrary() {
         els.mediaLibrary.hidden = true;
         resolve(item.path);
       });
-      els.mediaLibraryGrid.append(btn);
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'sac-media-del';
+      del.title = 'Delete image';
+      del.textContent = '×';
+      del.addEventListener('click', () => deleteFromLibrary(item.path, cell));
+
+      cell.append(btn, del);
+      els.mediaLibraryGrid.append(cell);
     }
 
     els.mediaLibraryClose.onclick = () => {
@@ -249,6 +308,34 @@ function openLibrary() {
 
     els.mediaLibrary.hidden = false;
   });
+}
+
+// true if the draft references this image path anywhere (so we can warn before deleting)
+function usesMedia(path) {
+  return JSON.stringify(store.state).includes(`"${path}"`);
+}
+
+// confirm, then delete an image from the library; drop its tile and advance the head if it moved
+async function deleteFromLibrary(path, cell) {
+  const inUse = usesMedia(path);
+  const ok = await confirmDialog({
+    title: 'Delete image',
+    body: inUse
+      ? "This image is still used somewhere on the site - deleting it will leave a broken image there. Delete it anyway?"
+      : "Delete this image permanently? This can't be undone.",
+    confirmLabel: 'Delete',
+    cancelLabel: 'Cancel',
+    danger: true,
+  });
+  if (!ok) return;
+
+  try {
+    const res = await api.deleteMedia(path);
+    if (res?.headSha) store.apply(afterPublish, res.headSha);
+    cell.remove();
+  } catch (err) {
+    alert(err instanceof ApiError ? err.message : 'Delete failed.');
+  }
 }
 
 // upload a file and remember its blob: url so the preview shows it before publishing

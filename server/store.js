@@ -2,7 +2,7 @@
 GitHub (commits to the repo, used in production) or local disk (straight to the working
 tree, for zero-setup local dev). getStore() picks one based on whether GITHUB_* env is set. */
 import { createHash } from 'node:crypto';
-import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, stat, unlink, writeFile } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { processImage, uploadFilename } from './media.js';
@@ -71,6 +71,14 @@ async function githubStore() {
       });
 
       return { path: `/media/uploads/${filename}`, headSha: sha };
+    },
+
+    async deleteMedia(webPath) {
+      // /media/foo.jpg -> public/media/foo.jpg; deleting is a commit, so it moves the head too
+      const path = `public${webPath}`;
+      const baseSha = await gh.getHeadSha();
+      const { sha } = await gh.commitFiles({ baseSha, files: [{ path, delete: true }], message: `Delete ${path}` });
+      return { headSha: sha };
     },
   };
 }
@@ -142,6 +150,15 @@ function localStore() {
       // no headSha: writing an image doesn't touch the content hash, so the draft's baseSha
       // stays put (and keeps detecting genuine content changes)
       return { path: `/media/uploads/${filename}` };
+    },
+
+    async deleteMedia(webPath) {
+      // stay inside public/media no matter what path the client sends
+      const mediaDir = join(root, 'public/media');
+      const target = join(mediaDir, webPath.replace(/^\/media\//, ''));
+      if (!target.startsWith(mediaDir)) throw new Error('Invalid media path');
+      await unlink(target).catch(() => {});
+      return {};
     },
   };
 }

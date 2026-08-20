@@ -28,6 +28,7 @@ export const api = {
   logout: () => request('/api/logout', { method: 'POST' }),
   content: () => request('/api/content'),
   media: () => request('/api/media'),
+  deleteMedia: (path) => request('/api/media/delete', { method: 'POST', body: JSON.stringify({ path }) }),
   publish: (payload) => request('/api/publish', { method: 'POST', body: JSON.stringify(payload) }),
 
   async upload(file) {

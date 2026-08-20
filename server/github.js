@@ -114,8 +114,9 @@ export async function commitFiles({ baseSha, files, message }) {
 
   const baseCommit = await api(`/repos/${repo}/git/commits/${baseSha}`, { token });
 
-  const textFiles = files.filter((f) => f.encoding !== 'base64');
-  const binaryFiles = files.filter((f) => f.encoding === 'base64');
+  const deletions = files.filter((f) => f.delete);
+  const textFiles = files.filter((f) => !f.delete && f.encoding !== 'base64');
+  const binaryFiles = files.filter((f) => !f.delete && f.encoding === 'base64');
 
   const binaryBlobs = await Promise.all(
     binaryFiles.map(async (f) => {
@@ -136,6 +137,7 @@ export async function commitFiles({ baseSha, files, message }) {
       tree: [
         ...textFiles.map((f) => ({ path: f.path, mode: '100644', type: 'blob', content: f.content })),
         ...binaryBlobs.map((f) => ({ path: f.path, mode: '100644', type: 'blob', sha: f.sha })),
+        ...deletions.map((f) => ({ path: f.path, mode: '100644', type: 'blob', sha: null })),
       ],
     }),
   });

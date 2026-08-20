@@ -130,12 +130,20 @@ function imagePicker(value, onChange, { openLibrary, upload }) {
   const preview = el('img', { class: 'sac-image-picker__preview', src: value || '', alt: '' });
   if (!value) preview.style.display = 'none';
 
+  // crop only makes sense once there's an image to crop
+  const cropBtn = el('button', { type: 'button', class: 'sac-btn sac-btn--sm', text: 'Crop' });
+  const setImage = (src) => {
+    preview.src = src;
+    preview.style.display = '';
+    cropBtn.style.display = '';
+  };
+  cropBtn.style.display = value ? '' : 'none';
+
   const chooseBtn = el('button', { type: 'button', class: 'sac-btn sac-btn--sm', text: 'Choose from library' });
   chooseBtn.addEventListener('click', async () => {
     const picked = await openLibrary();
     if (picked) {
-      preview.src = picked;
-      preview.style.display = '';
+      setImage(picked);
       onChange(picked);
     }
   });
@@ -150,8 +158,7 @@ function imagePicker(value, onChange, { openLibrary, upload }) {
     uploadBtn.textContent = 'Uploading…';
     try {
       const result = await upload(file);
-      preview.src = result.blobUrl ?? result.path;
-      preview.style.display = '';
+      setImage(result.blobUrl ?? result.path);
       onChange(result.path);
     } finally {
       uploadBtn.disabled = false;
@@ -160,8 +167,123 @@ function imagePicker(value, onChange, { openLibrary, upload }) {
     }
   });
 
-  wrap.append(preview, el('div', { class: 'sac-image-picker__actions' }, [chooseBtn, uploadBtn, fileInput]));
+  // crop the current image to a File, upload it, and point the field at the new path
+  cropBtn.addEventListener('click', async () => {
+    const file = await cropImage(preview.src);
+    if (!file) return;
+    cropBtn.disabled = true;
+    cropBtn.textContent = 'Saving…';
+    try {
+      const result = await upload(file);
+      setImage(result.blobUrl ?? result.path);
+      onChange(result.path);
+    } finally {
+      cropBtn.disabled = false;
+      cropBtn.textContent = 'Crop';
+    }
+  });
+
+  wrap.append(preview, el('div', { class: 'sac-image-picker__actions' }, [chooseBtn, uploadBtn, cropBtn, fileInput]));
   return wrap;
+}
+
+function clamp(v, lo, hi) {
+  return Math.max(lo, Math.min(hi, v));
+}
+
+// crop modal: show the image with a draggable/resizable box, resolve with a cropped File (or
+// null if cancelled). the box moves by dragging its middle and resizes from the corner handles.
+function cropImage(src) {
+  return new Promise((resolve) => {
+    const overlay = el('div', { class: 'sac-modal' });
+    const panel = el('div', { class: 'sac-modal__panel sac-crop' });
+
+    const head = el('div', { class: 'sac-modal__head' }, [el('h2', { text: 'Crop image' })]);
+    const image = el('img', { class: 'sac-crop__img', alt: '' });
+    const box = el('div', { class: 'sac-crop__box' });
+    for (const pos of ['nw', 'ne', 'sw', 'se']) box.append(el('span', { class: `sac-crop__handle sac-crop__handle--${pos}`, 'data-h': pos }));
+    const stage = el('div', { class: 'sac-crop__stage' }, [image, box]);
+
+    const cancel = el('button', { type: 'button', class: 'sac-btn', text: 'Cancel' });
+    const save = el('button', { type: 'button', class: 'sac-btn sac-btn--primary', text: 'Crop & save' });
+    const actions = el('div', { class: 'sac-crop__actions' }, [cancel, save]);
+
+    panel.append(head, stage, actions);
+    overlay.append(panel);
+    document.body.append(overlay);
+
+    const close = (val) => { overlay.remove(); resolve(val); };
+    cancel.addEventListener('click', () => close(null));
+
+    image.addEventListener('load', () => {
+      // start with a centered box covering 80% of the image
+      const w = image.clientWidth, h = image.clientHeight;
+      const bw = Math.round(w * 0.8), bh = Math.round(h * 0.8);
+      Object.assign(box.style, { left: `${(w - bw) / 2}px`, top: `${(h - bh) / 2}px`, width: `${bw}px`, height: `${bh}px` });
+    });
+    image.src = src;
+
+    setupCropInteractions(stage, image, box);
+    save.addEventListener('click', async () => close(await extractCrop(image, box)));
+  });
+}
+
+// drag the box to move it, drag a corner handle to resize; everything clamped to the image
+function setupCropInteractions(stage, image, box) {
+  let mode = null;
+  let startX = 0, startY = 0, orig = null;
+
+  const onMove = (e) => {
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    const maxW = image.clientWidth, maxH = image.clientHeight, min = 24;
+    let { left, top, width, height } = orig;
+
+    if (mode === 'move') {
+      left = clamp(orig.left + dx, 0, maxW - width);
+      top = clamp(orig.top + dy, 0, maxH - height);
+    } else {
+      if (mode.includes('e')) width = clamp(orig.width + dx, min, maxW - orig.left);
+      if (mode.includes('s')) height = clamp(orig.height + dy, min, maxH - orig.top);
+      if (mode.includes('w')) { left = clamp(orig.left + dx, 0, orig.left + orig.width - min); width = orig.left + orig.width - left; }
+      if (mode.includes('n')) { top = clamp(orig.top + dy, 0, orig.top + orig.height - min); height = orig.top + orig.height - top; }
+    }
+    Object.assign(box.style, { left: `${left}px`, top: `${top}px`, width: `${width}px`, height: `${height}px` });
+  };
+
+  const onUp = () => {
+    mode = null;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+  };
+
+  stage.addEventListener('mousedown', (e) => {
+    const handle = e.target.closest('[data-h]');
+    if (!handle && e.target !== box) return;
+    e.preventDefault();
+    mode = handle ? handle.dataset.h : 'move';
+    startX = e.clientX; startY = e.clientY;
+    orig = { left: box.offsetLeft, top: box.offsetTop, width: box.offsetWidth, height: box.offsetHeight };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+}
+
+// map the box (in display pixels) to the image's natural pixels and draw that region to a File
+function extractCrop(image, box) {
+  return new Promise((resolve) => {
+    const scaleX = image.naturalWidth / image.clientWidth;
+    const scaleY = image.naturalHeight / image.clientHeight;
+    const sx = Math.max(0, Math.round(box.offsetLeft * scaleX));
+    const sy = Math.max(0, Math.round(box.offsetTop * scaleY));
+    const sw = Math.round(box.offsetWidth * scaleX);
+    const sh = Math.round(box.offsetHeight * scaleY);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = sw;
+    canvas.height = sh;
+    canvas.getContext('2d').drawImage(image, sx, sy, sw, sh, 0, 0, sw, sh);
+    canvas.toBlob((blob) => resolve(blob ? new File([blob], 'crop.jpg', { type: 'image/jpeg' }) : null), 'image/jpeg', 0.92);
+  });
 }
 
 // For color picker, text swatches gives the theme colors , one for custom too

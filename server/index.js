@@ -61,6 +61,20 @@ app.get('/api/media', async (req, res, next) => {
   }
 });
 
+// delete one image from the library; path must be a /media/ web path (no traversal)
+app.post('/api/media/delete', async (req, res, next) => {
+  try {
+    const { path } = req.body ?? {};
+    if (typeof path !== 'string' || !path.startsWith('/media/') || path.includes('..')) {
+      return res.status(400).json({ error: 'Invalid media path.' });
+    }
+    const store = await getStore();
+    res.json(await store.deleteMedia(path));
+  } catch (err) {
+    next(err);
+  }
+});
+
 // write the whole draft back; baseSha guards against publishing over someone else's change (409)
 app.post('/api/publish', async (req, res, next) => {
   try {
