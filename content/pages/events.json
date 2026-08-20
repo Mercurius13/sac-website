@@ -20,12 +20,12 @@
       "pastLabel": "Past events",
       "upcoming": [
         {
-          "date": "2026-09-12",
+          "date": "2026-09-07",
           "time": "6:00pm",
           "location": "Campus Center Ballroom",
-          "title": "Fall Kickoff",
-          "description": "Free food, music, and a spin wheel. Meet the E-Board.",
-          "image": "/media/events/bingo-trivia-night.jpg"
+          "title": "Scavenger Hunt",
+          "description": "",
+          "image": "/media/uploads/scavenger-hunt-f26-poster-ad20568e.jpg"
         },
         {
           "date": "2026-10-14",
