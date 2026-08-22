@@ -7,7 +7,7 @@
       "id": "events-hero",
       "type": "hero",
       "heading": "Events",
-      "subheading": "Past and Present ",
+      "subheading": "What we're running, and what we've run.",
       "image": "/media/events/homecoming-movie-night.jpg",
       "imageAlt": "Students at a SAC homecoming movie night"
     },
@@ -25,14 +25,14 @@
           "location": "Campus Center Ballroom",
           "title": "Scavenger Hunt",
           "description": "",
-          "image": "/media/uploads/scavenger-hunt-f26-poster-ad20568e.jpg"
+          "image": "/media/uploads/crop-68628d2b.jpg"
         },
         {
           "date": "2026-10-14",
           "time": "6:00pm",
           "location": "The Greens",
           "title": "Highlanders on the Green",
-          "description": "Movie Night (DISCLOSURE DAY). Free food, merch and blankets."
+          "description": "Movie Night (Obsession, 2026). Free food, merch and blankets."
         }
       ],
       "past": [
