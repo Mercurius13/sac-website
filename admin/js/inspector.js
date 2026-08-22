@@ -124,10 +124,11 @@ function rangeInput(value, onChange, { min, max, step, suffix }) {
   return wrap;
 }
 
-// For image picker
-function imagePicker(value, onChange, { openLibrary, upload }) {
+// For image picker. resolveSrc maps a stored path to a displayable url (a blob: for images
+// uploaded this session that aren't on the served filesystem yet).
+function imagePicker(value, onChange, { openLibrary, upload, resolveSrc = (s) => s }) {
   const wrap = el('div', { class: 'sac-image-picker' });
-  const preview = el('img', { class: 'sac-image-picker__preview', src: value || '', alt: '' });
+  const preview = el('img', { class: 'sac-image-picker__preview', src: value ? resolveSrc(value) : '', alt: '' });
   if (!value) preview.style.display = 'none';
 
   // crop only makes sense once there's an image to crop

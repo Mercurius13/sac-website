@@ -254,8 +254,14 @@ function renderPopoverBody(group) {
       else store.apply(updateBlockField, activeSlug, selectedBlockId, field, value);
       renderPopoverBody(group);
     },
-    { openLibrary, upload: uploadImage },
+    { openLibrary, upload: uploadImage, resolveSrc },
   );
+}
+
+// a freshly-uploaded image lives in a blob: url until the admin redeploys with the committed
+// file, so show that for previews - a raw /media/uploads path would 404 in the meantime
+function resolveSrc(path) {
+  return (path && blobUrls.get(path)) || path || '';
 }
 
 // closing the popover keeps the block selected, so bring its toolbar back
