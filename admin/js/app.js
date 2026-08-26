@@ -119,10 +119,10 @@ function confirmDialog({ title, body, confirmLabel = 'Continue', cancelLabel = '
 // the resume-draft prompt (shown when a saved draft is found on load)
 function confirmResume() {
   return confirmDialog({
-    title: 'YOU FORGOT TO PUBLISH CHANGES',
-    body: "Do you want to continue with the changes you've made? or start fresh?",
-    confirmLabel: 'Continue',
-    cancelLabel: 'Discard',
+    title: 'SOMEONE ELSE HAS PUBLISHED CHANGES',
+    body: "Do you want to accept your teammates changes?",
+    confirmLabel: 'No, start fresh',
+    cancelLabel: 'Yes, accept my teammates changes',
   });
 }
 
