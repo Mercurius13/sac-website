@@ -15,8 +15,16 @@
       "id": "gi-flyer",
       "type": "image",
       "image": "/media/get-involved/banner.jpg",
-      "imageAlt": "SAC flyer reading 'Less Stress, More Fun'. The Student Activities Council brings fun to NJIT through major events, volunteering, and social media and event coordinator committees. General meetings Wednesdays at 2:30, Campus Center 476.",
+      "imageAlt": "SAC flyer reading 'Less Stress, More Fun'. The Student Activities Council brings fun to NJIT through major events, volunteering, and social media and event coordinator committees. General Nody Meetings Wednesdays at 2:30pm, Campus Center 476.",
       "caption": ""
+    },
+    {
+      "id": "gi-volunteer-signup",
+      "type": "volunteer",
+      "heading": "Volunteer Opportunities",
+      "link": "",
+      "activeUntil": "",
+      "fallbackText": "No volunteers needed yet, please wait until our next event."
     },
     {
       "id": "gi-committees",
@@ -26,7 +34,7 @@
       "items": [
         {
           "title": "The Social Media Committee",
-          "subtitle": "12:30pm on Wednesdays",
+          "subtitle": "1:00pm on Tuesdays",
           "body": "Collaborate with the team to plan and create marketing materials that promote our organization's events and initiatives."
         },
         {

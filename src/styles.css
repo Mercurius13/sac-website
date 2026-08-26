@@ -589,6 +589,16 @@ button:focus-visible,
   .event__media, .event__media img { width: 100%; height: 160px; }
 }
 
+.signup-btn { display: inline-block; margin-top: 0.5rem; }
+.signup-btn img { max-width: 100%; height: auto; display: block; }
+
+.volunteer__note {
+  margin: 0.5rem 0 0;
+  font-size: var(--t-base);
+  font-style: italic;
+  color: var(--block-fg, var(--c-muted));
+}
+
 .site-footer {
   margin-top: var(--space);
   background: var(--c-ink);

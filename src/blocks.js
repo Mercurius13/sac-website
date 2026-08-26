@@ -285,6 +285,30 @@ const renderers = {
 </section>`;
   },
 
+  // a share link that expires: while today is on or before "active until", show the SignUp
+  // button; after that day passes the link auto-disappears and the fallback message shows instead
+  volunteer(block, { today = new Date() } = {}) {
+    const href = safeHref(block.link);
+    const cutoff = new Date(today);
+    cutoff.setHours(0, 0, 0, 0);
+
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(block.activeUntil ?? '').trim());
+    const end = m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
+    const active = href && (!end || Number.isNaN(end.getTime()) || end >= cutoff);
+
+    const cta = active
+      ? `<a class="signup-btn" href="${href}" target="_blank" rel="noopener noreferrer" aria-label="View volunteer opportunities on SignUp (opens in a new tab)">${img('https://signup.com/imgs/icons/signup-choose-a-spot-btn.png', 'View volunteer opportunities on SignUp')}</a>`
+      : `<p class="volunteer__note">${esc(block.fallbackText || 'No volunteers needed yet, please wait until our next event.')}</p>`;
+
+    return `
+<section class="block volunteer-block">
+  <div class="wrap">
+    ${block.heading ? `<h2 class="section-title">${esc(block.heading)}</h2>` : ''}
+    ${cta}
+  </div>
+</section>`;
+  },
+
 };
 
 // the admin reads this to know which fields each block type exposes (and, for lists,
@@ -321,6 +345,11 @@ export const BLOCK_SCHEMA = {
     fields: ['heading', 'note', 'upcomingLabel', 'pastLabel', 'upcoming', 'past'],
     upcomingFields: ['date', 'time', 'location', 'title', 'description', 'image'],
     pastFields: ['image', 'title'],
+  },
+  volunteer: {
+    label: 'Volunteer sign-up',
+    group: 'Content',
+    fields: ['heading', 'link', 'activeUntil', 'fallbackText'],
   },
 };
 
