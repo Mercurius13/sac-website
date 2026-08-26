@@ -7,8 +7,8 @@
       "id": "events-hero",
       "type": "hero",
       "heading": "Events",
-      "subheading": "What we're running, and what we've run.",
-      "image": "/media/events/homecoming-movie-night.jpg",
+      "subheading": "Past and Present ",
+      "image": "/media/uploads/background-0059d9d6.jpg",
       "imageAlt": "Students at a SAC homecoming movie night"
     },
     {
@@ -32,7 +32,7 @@
           "time": "6:00pm",
           "location": "The Greens",
           "title": "Highlanders on the Green",
-          "description": "Movie Night (Obsession, 2026). Free food, merch and blankets."
+          "description": "Movie Night ( DISCLOSURE DAY). Free food, merch and blankets."
         }
       ],
       "past": [
