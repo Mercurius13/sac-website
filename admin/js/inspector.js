@@ -55,6 +55,8 @@ const FIELD_CONFIG = {
   upcomingLabel: { label: '"Upcoming" section label', input: 'text' },
   pastLabel: { label: '"Past" section label', input: 'text' },
   date: { label: 'Date', input: 'date' },
+  startDate: { label: 'Start date', input: 'date' },
+  endDate: { label: 'End date', input: 'date' },
   time: { label: 'Time', input: 'text' },
   location: { label: 'Location', input: 'text' },
 };
@@ -383,7 +385,7 @@ function backgroundPicker(value, onChange) {
 
 // items editor deals with events, etc. which have multiple components in them
 // useful in gallery, card, FAQ, even lists, all crud and reorder operations allowed
-function itemsEditor(items, itemFields, onChange, imageHelpers) {
+function itemsEditor(items, itemFields, onChange, imageHelpers, opts = {}) {
   const wrap = el('div', { class: 'sac-items' });
 
   // all items rendered based on el from above
@@ -395,14 +397,30 @@ function itemsEditor(items, itemFields, onChange, imageHelpers) {
       const cfg = FIELD_CONFIG[field] ?? { label: field, input: 'text' };
       const setField = (value) => {
         const next = items.map((it, i) => (i === index ? { ...it, [field]: value } : it));
+        const cur = next[index];
+        // an event's end can never be before its start - clamp so it's impossible either way
+        if (field === 'startDate' && value && cur.endDate && cur.endDate < value) cur.endDate = value;
+        if (field === 'endDate' && value && cur.startDate && value < cur.startDate) cur.endDate = cur.startDate;
         onChange(next);
       };
-      fields.append(row(cfg.label, buildControl(cfg, item[field], setField, imageHelpers)));
+      const control = buildControl(cfg, item[field], setField, imageHelpers);
+      // guide the native date picker: end can't go before start, start can't go past end
+      if (field === 'endDate' && item.startDate) control.min = item.startDate;
+      if (field === 'startDate' && item.endDate) control.max = item.endDate;
+      fields.append(row(cfg.label, control));
     }
 
     // remove button to remove new things
     const removeBtn = el('button', { type: 'button', class: 'sac-btn sac-btn--sm sac-btn--danger', text: 'Remove' });
     removeBtn.addEventListener('click', () => onChange(items.filter((_, i) => i !== index)));
+
+    // optional move-to-other-list button (Upcoming <-> Past)
+    const controls = [];
+    if (opts.onMove) {
+      const moveBtn = el('button', { type: 'button', class: 'sac-btn sac-btn--sm', text: opts.moveLabel || 'Move' });
+      moveBtn.addEventListener('click', () => opts.onMove(index));
+      controls.push(moveBtn);
+    }
 
     // moves the item up
     const upBtn = el('button', { type: 'button', class: 'sac-btn sac-btn--sm', text: '↑', title: 'Move up' });
@@ -422,7 +440,7 @@ function itemsEditor(items, itemFields, onChange, imageHelpers) {
       onChange(next);
     });
 
-    card.append(el('div', { class: 'sac-item__controls' }, [upBtn, downBtn, removeBtn]), fields);
+    card.append(el('div', { class: 'sac-item__controls' }, [upBtn, downBtn, ...controls, removeBtn]), fields);
     return card;
   };
 
@@ -530,7 +548,32 @@ export function renderFields(container, block, fields, onFieldChange, imageHelpe
     if (field === 'upcoming' || field === 'past' || field === 'socials') {
       const itemFields = schema[cfg.itemsKey] ?? [];
       container.append(el('h4', { class: 'sac-fieldgroup__title', text: cfg.label }));
-      container.append(itemsEditor(block[field] ?? [], itemFields, (v) => onFieldChange(field, v), imageHelpers));
+
+      // let the admin move an event between the two lists by hand (e.g. wrong date entered)
+      let opts = {};
+      if (field === 'upcoming') {
+        opts = {
+          moveLabel: 'Move to Past ↓',
+          onMove: (index) => {
+            const up = block.upcoming ?? [];
+            const item = up[index];
+            onFieldChange('upcoming', up.filter((_, i) => i !== index));
+            onFieldChange('past', [{ title: item.title, image: item.image, imageAlt: item.imageAlt }, ...(block.past ?? [])]);
+          },
+        };
+      } else if (field === 'past') {
+        opts = {
+          moveLabel: 'Move to Upcoming ↑',
+          onMove: (index) => {
+            const past = block.past ?? [];
+            const item = past[index];
+            onFieldChange('past', past.filter((_, i) => i !== index));
+            onFieldChange('upcoming', [...(block.upcoming ?? []), item]);
+          },
+        };
+      }
+
+      container.append(itemsEditor(block[field] ?? [], itemFields, (v) => onFieldChange(field, v), imageHelpers, opts));
       continue;
     }
 

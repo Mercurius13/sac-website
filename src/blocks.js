@@ -13,6 +13,12 @@ export function esc(value) {
     .replace(/'/g, '&#39;');
 }
 
+// same as esc, but keeps line breaks the admin typed by turning them into <br>.
+// use for text CONTENT only, never for attribute values.
+export function escLines(value) {
+  return esc(value).replace(/\r?\n/g, '<br>');
+}
+
 // only let through links we trust (site-relative, http(s), mailto, tel) - drops javascript: etc.
 export function safeHref(value) {
   const raw = String(value ?? '').trim();
@@ -59,11 +65,12 @@ export function sanitizeHtml(input) {
   return out + esc(html.slice(last));
 }
 
-// sanitize body text and, if it's just a bare line, wrap it in a paragraph
+// sanitize body text; if it's plain text, wrap it in a paragraph and keep its line breaks
 function asProse(body) {
   const clean = sanitizeHtml(body).trim();
   if (!clean) return '';
-  return /^<(p|ul|ol|h3|h4)\b/i.test(clean) ? clean : `<p>${clean}</p>`;
+  if (/^<(p|ul|ol|h3|h4)\b/i.test(clean)) return clean;
+  return `<p>${clean.replace(/\r?\n/g, '<br>')}</p>`;
 }
 
 // build an <img> tag; returns nothing if the src isn't a safe url. eager = load it right away (hero)
@@ -91,8 +98,8 @@ const renderers = {
 <section class="block hero ${heroClasses(block)}${block.image ? '' : ' hero--plain'}"${style}>
   ${block.image ? `<div class="hero__media">${img(block.image, block.imageAlt, { eager: first })}</div>` : ''}
   <div class="hero__inner">
-    <h1 class="hero__title">${esc(block.heading)}</h1>
-    ${block.subheading ? `<p class="hero__sub">${esc(block.subheading)}</p>` : ''}
+    <h1 class="hero__title">${escLines(block.heading)}</h1>
+    ${block.subheading ? `<p class="hero__sub">${escLines(block.subheading)}</p>` : ''}
     ${button}
   </div>
 </section>`;
@@ -102,7 +109,7 @@ const renderers = {
     return `
 <section class="block prose-block">
   <div class="wrap">
-    ${block.heading ? `<h2 class="section-title">${esc(block.heading)}</h2>` : ''}
+    ${block.heading ? `<h2 class="section-title">${escLines(block.heading)}</h2>` : ''}
     <div class="prose">${asProse(block.body)}</div>
   </div>
 </section>`;
@@ -116,7 +123,7 @@ const renderers = {
   <div class="wrap wrap--narrow">
     <figure class="figure${sizeClass ? ` ${sizeClass}` : ''}">
       ${img(block.image, block.imageAlt)}
-      ${block.caption ? `<figcaption>${esc(block.caption)}</figcaption>` : ''}
+      ${block.caption ? `<figcaption>${escLines(block.caption)}</figcaption>` : ''}
     </figure>
   </div>
 </section>`;
@@ -138,7 +145,7 @@ const renderers = {
     return `
 <section class="block gallery-block">
   <div class="wrap">
-    ${block.heading ? `<h2 class="section-title">${esc(block.heading)}</h2>` : ''}
+    ${block.heading ? `<h2 class="section-title">${escLines(block.heading)}</h2>` : ''}
     <div class="gallery" data-gallery>
       <button class="gallery__nav gallery__nav--prev" type="button" data-gallery-prev aria-label="Previous photo">&#8249;</button>
       <ul class="gallery__track" tabindex="0" aria-label="${esc(block.heading || 'Photo gallery')}">${slides}
@@ -157,12 +164,12 @@ const renderers = {
         const media = item.image
           ? `<div class="card__media">${img(item.image, item.imageAlt || item.title)}</div>`
           : '';
-        const body = item.body ? `<p class="card__body">${esc(item.body)}</p>` : '';
+        const body = item.body ? `<p class="card__body">${escLines(item.body)}</p>` : '';
         const inner = `
         ${media}
         <div class="card__text">
-          ${item.title ? `<h3 class="card__title">${esc(item.title)}</h3>` : ''}
-          ${item.subtitle ? `<p class="card__subtitle">${esc(item.subtitle)}</p>` : ''}
+          ${item.title ? `<h3 class="card__title">${escLines(item.title)}</h3>` : ''}
+          ${item.subtitle ? `<p class="card__subtitle">${escLines(item.subtitle)}</p>` : ''}
           ${body}
         </div>`;
 
@@ -178,8 +185,8 @@ const renderers = {
     return `
 <section class="block cards-block">
   <div class="wrap">
-    ${block.heading ? `<h2 class="section-title">${esc(block.heading)}</h2>` : ''}
-    ${block.subheading ? `<p class="section-sub">${esc(block.subheading)}</p>` : ''}
+    ${block.heading ? `<h2 class="section-title">${escLines(block.heading)}</h2>` : ''}
+    ${block.subheading ? `<p class="section-sub">${escLines(block.subheading)}</p>` : ''}
     <ul class="cards cards--${variant}">${cards}
     </ul>
   </div>
@@ -195,16 +202,16 @@ const renderers = {
 <section class="block cta-block">
   <div class="wrap wrap--narrow">
     <div class="cta">
-      ${block.heading ? `<h2 class="cta__title">${esc(block.heading)}</h2>` : ''}
-      ${block.body ? `<p class="cta__body">${esc(block.body)}</p>` : ''}
-      <a class="btn btn--gold" href="${href}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(block.label || 'Open')}</a>
+      ${block.heading ? `<h2 class="cta__title">${escLines(block.heading)}</h2>` : ''}
+      ${block.body ? `<p class="cta__body">${escLines(block.body)}</p>` : ''}
+      <a class="btn btn--gold" href="${href}"${external ? ' target="_blank" rel="noopener noreferrer"' : ''}>${escLines(block.label || 'Open')}</a>
     </div>
   </div>
 </section>`;
   },
 
-  // two lists: upcoming (date/time/details) and past (thumbnail + name). an upcoming
-  // event whose date has passed migrates itself to the top of past, at render time only
+  // two lists: upcoming (start/end/details) and past (thumbnail + name). an upcoming event
+  // whose END date has passed migrates itself to the top of past, at render time only
   eventList(block, { today = new Date() } = {}) {
     const cutoff = new Date(today);
     cutoff.setHours(0, 0, 0, 0);
@@ -216,27 +223,39 @@ const renderers = {
       return Number.isNaN(date.getTime()) ? null : { date, iso: m[0] };
     };
 
-    const upcomingRaw = (block.upcoming ?? []).map((item) => ({ ...item, _d: parseDate(item.date) }));
+    const upcomingRaw = (block.upcoming ?? []).map((item) => {
+      const start = parseDate(item.startDate ?? item.date);
+      // end date drives the move to Past; if there's no end, the start date is the last day
+      const end = parseDate(item.endDate) ?? start;
+      return { ...item, _start: start, _end: end };
+    });
 
-    // An upcoming event whose date has passed is shown, automatically, as a
-    // Past tile (thumbnail + name) at the top of Past - most recent first.
-    // The date stays in the file; it just isn't displayed in the Past design.
+    // the event stays under Upcoming until its end date passes, then drops to the top of Past
+    // (most recent first). the dates stay in the file; they just aren't shown in the Past design.
     const stillUpcoming = upcomingRaw
-      .filter((item) => !item._d || item._d.date >= cutoff)
-      .sort((a, b) => (a._d ? a._d.date : Infinity) - (b._d ? b._d.date : Infinity));
+      .filter((item) => !item._end || item._end.date >= cutoff)
+      .sort((a, b) => (a._start ? a._start.date : Infinity) - (b._start ? b._start.date : Infinity));
 
     const migratedPast = upcomingRaw
-      .filter((item) => item._d && item._d.date < cutoff)
-      .sort((a, b) => b._d.date - a._d.date)
+      .filter((item) => item._end && item._end.date < cutoff)
+      .sort((a, b) => b._end.date - a._end.date)
       .map((item) => ({ title: item.title, image: item.image, imageAlt: item.imageAlt }));
 
     const past = [...migratedPast, ...(block.past ?? [])];
 
-    const fmt = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    const fmtFull = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    const fmtRange = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+    const dateLabel = (item) => {
+      if (!item._start) return '';
+      const oneDay = !item._end || item._end.iso === item._start.iso;
+      if (oneDay) return `<time datetime="${esc(item._start.iso)}">${esc(fmtFull.format(item._start.date))}</time>`;
+      return `<time datetime="${esc(item._start.iso)}">${esc(fmtRange.format(item._start.date))}</time> &ndash; <time datetime="${esc(item._end.iso)}">${esc(fmtFull.format(item._end.date))}</time>`;
+    };
 
     const upcomingRow = (item) => {
       const meta = [
-        item._d ? `<time datetime="${esc(item._d.iso)}">${esc(fmt.format(item._d.date))}</time>` : '',
+        dateLabel(item),
         item.time ? `<span>${esc(item.time)}</span>` : '',
         item.location ? `<span>${esc(item.location)}</span>` : '',
       ]
@@ -247,9 +266,9 @@ const renderers = {
       <li class="event">
         ${item.image ? `<div class="event__media">${img(item.image, item.imageAlt || item.title)}</div>` : ''}
         <div class="event__text">
-          ${item.title ? `<h3 class="event__title">${esc(item.title)}</h3>` : ''}
+          ${item.title ? `<h3 class="event__title">${escLines(item.title)}</h3>` : ''}
           ${meta ? `<p class="event__meta">${meta}</p>` : ''}
-          ${item.description ? `<p class="event__desc">${esc(item.description)}</p>` : ''}
+          ${item.description ? `<p class="event__desc">${escLines(item.description)}</p>` : ''}
         </div>
       </li>`;
     };
@@ -257,7 +276,7 @@ const renderers = {
     const pastTile = (item) => `
       <li class="card">
         ${item.image ? `<div class="card__media">${img(item.image, item.imageAlt || item.title)}</div>` : ''}
-        <div class="card__text">${item.title ? `<h3 class="card__title">${esc(item.title)}</h3>` : ''}</div>
+        <div class="card__text">${item.title ? `<h3 class="card__title">${escLines(item.title)}</h3>` : ''}</div>
       </li>`;
 
     const upcomingSection = stillUpcoming.length
@@ -279,8 +298,8 @@ const renderers = {
     return `
 <section class="block events-block">
   <div class="wrap">
-    ${block.heading ? `<h2 class="section-title">${esc(block.heading)}</h2>` : ''}
-    ${block.note ? `<p class="section-sub">${esc(block.note)}</p>` : ''}${upcomingSection}${pastSection}
+    ${block.heading ? `<h2 class="section-title">${escLines(block.heading)}</h2>` : ''}
+    ${block.note ? `<p class="section-sub">${escLines(block.note)}</p>` : ''}${upcomingSection}${pastSection}
   </div>
 </section>`;
   },
@@ -298,12 +317,12 @@ const renderers = {
 
     const cta = active
       ? `<a class="signup-btn" href="${href}" target="_blank" rel="noopener noreferrer" aria-label="View volunteer opportunities on SignUp (opens in a new tab)">${img('https://signup.com/imgs/icons/signup-choose-a-spot-btn.png', 'View volunteer opportunities on SignUp')}</a>`
-      : `<p class="volunteer__note">${esc(block.fallbackText || 'No volunteers needed yet, please wait until our next event.')}</p>`;
+      : `<p class="volunteer__note">${escLines(block.fallbackText || 'No volunteers needed yet, please wait until our next event.')}</p>`;
 
     return `
 <section class="block volunteer-block">
   <div class="wrap">
-    ${block.heading ? `<h2 class="section-title">${esc(block.heading)}</h2>` : ''}
+    ${block.heading ? `<h2 class="section-title">${escLines(block.heading)}</h2>` : ''}
     ${cta}
   </div>
 </section>`;
@@ -343,7 +362,7 @@ export const BLOCK_SCHEMA = {
     label: 'Events list',
     group: 'Content',
     fields: ['heading', 'note', 'upcomingLabel', 'pastLabel', 'upcoming', 'past'],
-    upcomingFields: ['date', 'time', 'location', 'title', 'description', 'image'],
+    upcomingFields: ['startDate', 'endDate', 'time', 'location', 'title', 'description', 'image'],
     pastFields: ['image', 'title'],
   },
   volunteer: {
