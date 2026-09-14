@@ -20,24 +20,28 @@
       "pastLabel": "Past events",
       "upcoming": [
         {
-          "date": "2026-09-07",
-          "time": "",
-          "location": "Campus Center Ballroom",
-          "title": "Scavenger Hunt",
-          "description": "Ready for a campus-wide adventure? 🗺️✨ NJIT SAC is hosting a 5-day Scavenger Hunt from September 7–11!\n\nHere’s how to play & win:\n🔍 Look out for our daily riddles posted right here on Instagram.\n🏃‍♂️ Hunt down hidden, numbered SAC logos placed outdoors across campus.\n📸 Snap a clear selfie with the logo you find!\n📥 DM us your selfie with your Name & UCID, or show us in person at the SAC office to claim your daily prizes!",
-          "image": "/media/uploads/crop-68628d2b.jpg",
-          "startDate": "2026-09-07",
-          "endDate": "2026-09-11"
-        },
-        {
           "date": "2026-10-14",
           "time": "6:00pm",
           "location": "The Greens",
           "title": "Highlanders on the Green",
-          "description": "Movie Night ( DISCLOSURE DAY). Free food, merch and blankets."
+          "description": "Movie Night ( DISCLOSURE DAY). Free food, merch and blankets.",
+          "image": "/media/uploads/hhub-hoco-movie-night-176e6517.jpg"
+        },
+        {
+          "startDate": "2026-09-25",
+          "endDate": "2026-09-25",
+          "time": "10 am - 1 pm ",
+          "location": "CC Atrium",
+          "title": "DIY DAY ",
+          "image": "/media/uploads/hhub-diy-day-flyer-ba351566.jpg",
+          "description": "Midday craft break? Say less. Stop by the CC Atrium on 9/25 between 10 AM and 1 PM for DIY Day. Bring your friends, make some art, and grab some free food! 🎨🧃"
         }
       ],
       "past": [
+        {
+          "title": "Scavenger Hunt",
+          "image": "/media/uploads/crop-68628d2b.jpg"
+        },
         {
           "image": "/media/events/escape-rooms.jpg",
           "title": "Escape Rooms"
