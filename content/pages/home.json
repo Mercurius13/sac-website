@@ -13,13 +13,14 @@
       "button": {
         "label": "Get Involved",
         "href": "/get-involved"
-      }
+      },
+      "height": "short"
     },
     {
       "id": "home-purpose",
       "type": "richText",
       "heading": "Our Purpose",
-      "body": "The organization aims to enhance the undergraduate student experience at NJIT through <strong>social</strong> and <strong>recreational events</strong> and campus-wide collaborations. We prioritize member growth by providing opportunities for personal and professional development."
+      "body": "Our organization aims to enhance the undergraduate student experience at NJIT through <strong>social</strong> and <strong>recreational events</strong> and campus-wide collaborations. We prioritize member growth by providing opportunities for personal and professional development."
     },
     {
       "id": "home-meet-the-team",

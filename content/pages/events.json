@@ -7,37 +7,23 @@
       "id": "events-hero",
       "type": "hero",
       "heading": "Events",
-      "subheading": "Past and Present ",
+      "subheading": "Past & Present ",
       "image": "/media/uploads/background-0059d9d6.jpg",
       "imageAlt": "Students at a SAC homecoming movie night"
     },
     {
       "id": "events-list",
       "type": "eventList",
-      "heading": "Events list",
+      "heading": "Events List",
       "note": "FOR UNDERGRADUATES ONLY",
       "upcomingLabel": "Upcoming",
       "pastLabel": "Past events",
-      "upcoming": [
+      "upcoming": [],
+      "past": [
         {
-          "date": "2026-10-14",
-          "time": "6:00pm",
-          "location": "The Greens",
           "title": "Highlanders on the Green",
-          "description": "Movie Night ( DISCLOSURE DAY). Free food, merch and blankets.",
           "image": "/media/uploads/hhub-hoco-movie-night-176e6517.jpg"
         },
-        {
-          "startDate": "2026-09-25",
-          "endDate": "2026-09-25",
-          "time": "10 am - 1 pm ",
-          "location": "CC Atrium",
-          "title": "DIY DAY ",
-          "image": "/media/uploads/hhub-diy-day-flyer-ba351566.jpg",
-          "description": "Midday craft break? Say less. Stop by the CC Atrium on 9/25 between 10 AM and 1 PM for DIY Day. Bring your friends, make some art, and grab some free food! 🎨🧃"
-        }
-      ],
-      "past": [
         {
           "title": "Scavenger Hunt",
           "image": "/media/uploads/crop-68628d2b.jpg"

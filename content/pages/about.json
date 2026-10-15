@@ -7,7 +7,7 @@
       "id": "about-hero",
       "type": "hero",
       "heading": "About",
-      "subheading": "Meet the people behind the events.",
+      "subheading": "Meet the people behind the events!",
       "image": "/media/about/banner-01.jpg",
       "imageAlt": "The SAC E-Board posing together in costume at a campus event"
     },
@@ -21,7 +21,7 @@
     {
       "id": "about-eboard",
       "type": "cardGrid",
-      "heading": "E-Board",
+      "heading": "Our Executive Board",
       "subheading": "Fall 2026 - Spring 2027",
       "variant": "people",
       "items": [
@@ -43,7 +43,7 @@
         {
           "image": "/media/uploads/crop-8c24bc58.jpg",
           "title": "Amisha Parmar",
-          "subtitle": "Publicity"
+          "subtitle": "Publicist"
         },
         {
           "image": "/media/uploads/whatsapp-image-2026-08-20-at-11-14-05-febd4051.jpg",
