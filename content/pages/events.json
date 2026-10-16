@@ -18,7 +18,16 @@
       "note": "FOR UNDERGRADUATES ONLY",
       "upcomingLabel": "Upcoming",
       "pastLabel": "Past events",
-      "upcoming": [],
+      "upcoming": [
+        {
+          "image": "/media/uploads/crop-e7a99b2c.jpg",
+          "title": "Paranormal SACtivities ",
+          "location": "CC Ballrooms ",
+          "time": "4-7 PM",
+          "startDate": "2026-10-30",
+          "description": "Join the Student Activities Council for Paranormal SACtivities on October 30 from 4:00 PM to 7:00 PM in the Campus Center Ballrooms and Gallery. Come dressed in your best Halloween attire to compete for Best Dressed in our costume contest, or visit the rage room to de-stress.   Please Note: All participants must present a valid physical government ID to access the rage room.  "
+        }
+      ],
       "past": [
         {
           "title": "Highlanders on the Green",
